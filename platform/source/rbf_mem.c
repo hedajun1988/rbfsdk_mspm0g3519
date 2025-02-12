@@ -11,10 +11,10 @@
 #include "rbf_mem.h"
 void* rbf_malloc(size_t size)
 {
-    return malloc(size);
+    return pvPortMalloc(size);
 }
 
 void rbf_free(void *ptr)
 {
-    free(ptr);
+    vPortFree(ptr);
 }
