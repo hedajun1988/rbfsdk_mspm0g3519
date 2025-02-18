@@ -20,7 +20,7 @@ extern "C"
 
 #define RB_SDK_VERSION             0
 #define RB_SDK_REVISION            2
-#define RB_SDK_PATCH               4
+#define RB_SDK_PATCH               5
 
 #define RBF_DEVICE_MAC_LEN         (8)         /**< RBF sub-device MAC length */
 #define RBF_DEVICE_SN_LEN          (16)        /**< RBF sub-device serial number length */
@@ -178,7 +178,7 @@ typedef struct
      */
     union {
         unsigned char mac[RBF_DEVICE_MAC_LEN];            /**< Sub-device MAC address, to be filled in when registration type is MAC address registration */
-        unsigned char serialNumber[RBF_DEVICE_SN_LEN];    /**< Sub-device SN address, to be filled in when registration type is SN registration */
+        unsigned char serialNumber[RBF_DEVICE_SN_LEN];    /**< Sub-device SN address, to be filled in when registration type is SN registration，When registering, input SN in the SN field, and if it is less than 16 characters, fill the rest with 0x00 to complete it. */
     }param;
 }RBF_register_param_t;
 
@@ -192,9 +192,9 @@ typedef struct{
     unsigned char no;          /**< Sub-device registration number */
     RBF_dev_type_t type;       /**< Sub-device sub-type*/
     unsigned char ver[3];     /**< Sub-device version number*/
-    unsigned char sn[16];     /**< Sub-device serial number */
+    unsigned char sn[RBF_DEVICE_SN_LEN];     /**< Sub-device serial number SN is a visible string, up to 16 characters long (note that it cannot be handled in the C string way, because when SN reaches 16 characters, there is no '\0' in the array. */
     unsigned char err;        /**< Error code for registration failure*/
-    unsigned char mac[32];    /**< MAC address */
+    unsigned char mac[RBF_DEVICE_MAC_LEN];    /**< MAC address */
 }RBF_register_response_t;
 
 
