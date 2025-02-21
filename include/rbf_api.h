@@ -20,7 +20,7 @@ extern "C"
 
 #define RB_SDK_VERSION             0
 #define RB_SDK_REVISION            2
-#define RB_SDK_PATCH               5
+#define RB_SDK_PATCH               6
 
 #define RBF_DEVICE_MAC_LEN         (8)         /**< RBF sub-device MAC length */
 #define RBF_DEVICE_SN_LEN          (16)        /**< RBF sub-device serial number length */
@@ -223,8 +223,8 @@ typedef struct
 
 typedef struct
 {
-    uint8_t realtime_rssi; 
-    uint8_t avg_rssi;     
+    int32_t realtime_rssi; 
+    int32_t avg_rssi;     
 } RBF_hub_noise_t;
 
 /**
