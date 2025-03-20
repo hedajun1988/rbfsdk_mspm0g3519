@@ -12,6 +12,7 @@
 #define RBF_API_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -20,7 +21,7 @@ extern "C"
 
 #define RB_SDK_VERSION             0
 #define RB_SDK_REVISION            2
-#define RB_SDK_PATCH               6
+#define RB_SDK_PATCH               7
 
 #define RBF_DEVICE_MAC_LEN         (8)         /**< RBF sub-device MAC length */
 #define RBF_DEVICE_SN_LEN          (16)        /**< RBF sub-device serial number length */
@@ -150,6 +151,12 @@ typedef struct{
      * @param dataLen Length of data to be written to the RBF buffer
      */
     int (*write)(unsigned char *data, int dataLen);
+
+    /**
+     * @brief RBF Module reset
+     * 
+     */
+    void (*reset)(void);
 }RBF_port_t;
 
 
@@ -274,6 +281,11 @@ typedef struct
      * by rbf_get_hub_version()
      */
     int (*rbf_get_hub_noise)(RBF_hub_noise_t* noise);
+
+    /**
+     * @brief Callback for hub detects jamming
+     */
+    int (*rbf_jamming_handle)(bool jamming);
 }RBF_evt_callbacks_t;
 
 /**
@@ -300,13 +312,6 @@ int rbf_register_evt_callback(RBF_evt_callbacks_t* cbs);
  * @return int Return 0 on success, -1 on failure
  */
 int  rbf_init(void);
-
-/**
- * @brief Delete initializ the protocol stack
- * 
- * @return int unsigned int Return 0 on success, -1 on failure
- */
-int  rbf_delinit(void);
 
 
 /**
@@ -473,9 +478,18 @@ int rbf_device_io_alarm_set(unsigned char* io_list, unsigned char count, RBF_io_
  * 
  * @param freq  Currently supports RBF_FREQ_868/RBF_FREQ_915/RBF_FREQ_433
  * @return int 0: Setting successful, -1: Setting failed
+ * @note Calling this function is equivalent to calling rbf_set_hub(freq, 0)
  */
 int rbf_set_freq(RBF_Freq_t freq);
 
+/**
+ * @brief Set the hub
+ * 
+ * @param freq  Currently supports RBF_FREQ_868/RBF_FREQ_915/RBF_FREQ_433
+ * @param jamming_threshold Jamming threshold default-0
+ * @return int 0: Setting successful, -1: Setting failed
+ */
+int rbf_set_hub(RBF_Freq_t freq, unsigned char jamming_threshold);
 
 /**
  * @brief Get hub software version
