@@ -21,7 +21,7 @@ extern "C"
 
 #define RB_SDK_VERSION             0
 #define RB_SDK_REVISION            2
-#define RB_SDK_PATCH               11
+#define RB_SDK_PATCH               12
 
 #define RBF_DEVICE_MAC_LEN         (8)         /**< RBF sub-device MAC length */
 #define RBF_DEVICE_SN_LEN          (16)        /**< RBF sub-device serial number length */
@@ -128,6 +128,7 @@ typedef enum
     RBF_FREQ_868 = 0,  /**< 868MHz frequency band */
     RBF_FREQ_915 = 1,  /**< 915MHz frequency band */
     RBF_FREQ_433 = 2,  /**< 433MHz frequency band */
+    RBF_FREQ_916 = 3,  /**< 916MHz-927.9MHz frequency band */
 } RBF_Freq_t;
 
 /**
@@ -500,7 +501,7 @@ int rbf_set_freq(RBF_Freq_t freq);
 /**
  * @brief Set the hub
  * 
- * @param freq  Currently supports RBF_FREQ_868/RBF_FREQ_915/RBF_FREQ_433
+ * @param freq  Currently supports RBF_FREQ_868/RBF_FREQ_915/RBF_FREQ_433/RBF_FREQ_916
  * @param jamming_threshold Jamming threshold default-0
  * @return int 0: Setting successful, -1: Setting failed
  */
