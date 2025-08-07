@@ -20,8 +20,8 @@ extern "C"
 #endif 
 
 #define RB_SDK_VERSION             0
-#define RB_SDK_REVISION            2
-#define RB_SDK_PATCH               12
+#define RB_SDK_REVISION            3
+#define RB_SDK_PATCH               0
 
 #define RBF_DEVICE_MAC_LEN         (8)         /**< RBF sub-device MAC length */
 #define RBF_DEVICE_SN_LEN          (16)        /**< RBF sub-device serial number length */
@@ -63,6 +63,7 @@ typedef enum
     RBF_DEV_TYPE_OUT_SOUND    = 12,     /**< Outdoor sounder */
     RBF_DEV_TYPE_LED_KEYPAD   = 13,     /**< LED keypad */
     RBF_DEV_TYPE_KEYFOB       = 14,     /**< Key fob */
+    RBF_DEV_TYPE_OUT_PIR      = 15,     /**< Outdoor PIR sensor */
     RBF_DEV_TYPE_UNKNOW,            /**< Unknown device */
 } RBF_dev_type_t;
 
@@ -129,6 +130,8 @@ typedef enum
     RBF_FREQ_915 = 1,  /**< 915MHz frequency band */
     RBF_FREQ_433 = 2,  /**< 433MHz frequency band */
     RBF_FREQ_916 = 3,  /**< 916MHz-927.9MHz frequency band */
+    RBF_FREQ_WPC_868 = 4,  /**< 865MHz-868MHz frequency band */
+    RBF_FREQ_MAL_915 = 5,  /**< 919MHz-923MHz frequency band */
 } RBF_Freq_t;
 
 /**
@@ -555,6 +558,14 @@ int rbf_send_carrier(int channel, int power, RBF_wave_type_t type, RBF_ant_index
  * @return int 
  */
 int rbf_send_carrier_stop();
+
+
+/**
+ * @brief reset hub by port reset handle
+ * 
+ * @return int 0 RBF stack has been reset successfully
+ */
+int rbf_hub_reset(void);
 
 #ifdef __cplusplus
 }
