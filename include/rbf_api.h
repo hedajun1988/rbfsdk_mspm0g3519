@@ -12,6 +12,7 @@
 #define RBF_API_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -19,8 +20,8 @@ extern "C"
 #endif 
 
 #define RB_SDK_VERSION             0
-#define RB_SDK_REVISION            2
-#define RB_SDK_PATCH               3
+#define RB_SDK_REVISION            3
+#define RB_SDK_PATCH               0
 
 #define RBF_DEVICE_MAC_LEN         (8)         /**< RBF sub-device MAC length */
 #define RBF_DEVICE_SN_LEN          (16)        /**< RBF sub-device serial number length */
@@ -62,6 +63,7 @@ typedef enum
     RBF_DEV_TYPE_OUT_SOUND    = 12,     /**< Outdoor sounder */
     RBF_DEV_TYPE_LED_KEYPAD   = 13,     /**< LED keypad */
     RBF_DEV_TYPE_KEYFOB       = 14,     /**< Key fob */
+    RBF_DEV_TYPE_OUT_PIR      = 15,     /**< Outdoor PIR sensor */
     RBF_DEV_TYPE_UNKNOW,            /**< Unknown device */
 } RBF_dev_type_t;
 
@@ -127,6 +129,9 @@ typedef enum
     RBF_FREQ_868 = 0,  /**< 868MHz frequency band */
     RBF_FREQ_915 = 1,  /**< 915MHz frequency band */
     RBF_FREQ_433 = 2,  /**< 433MHz frequency band */
+    RBF_FREQ_916 = 3,  /**< 916MHz-927.9MHz frequency band */
+    RBF_FREQ_WPC_868 = 4,  /**< 865MHz-868MHz frequency band */
+    RBF_FREQ_MAL_915 = 5,  /**< 919MHz-923MHz frequency band */
 } RBF_Freq_t;
 
 /**
@@ -150,6 +155,12 @@ typedef struct{
      * @param dataLen Length of data to be written to the RBF buffer
      */
     int (*write)(unsigned char *data, int dataLen);
+
+    /**
+     * @brief RBF Module reset
+     * 
+     */
+    void (*reset)(void);
 }RBF_port_t;
 
 
@@ -178,7 +189,7 @@ typedef struct
      */
     union {
         unsigned char mac[RBF_DEVICE_MAC_LEN];            /**< Sub-device MAC address, to be filled in when registration type is MAC address registration */
-        unsigned char serialNumber[RBF_DEVICE_SN_LEN];    /**< Sub-device SN address, to be filled in when registration type is SN registration */
+        unsigned char serialNumber[RBF_DEVICE_SN_LEN];    /**< Sub-device SN address, to be filled in when registration type is SN registration，When registering, input SN in the SN field, and if it is less than 16 characters, fill the rest with 0x00 to complete it. */
     }param;
 }RBF_register_param_t;
 
@@ -192,9 +203,9 @@ typedef struct{
     unsigned char no;          /**< Sub-device registration number */
     RBF_dev_type_t type;       /**< Sub-device sub-type*/
     unsigned char ver[3];     /**< Sub-device version number*/
-    unsigned char sn[16];     /**< Sub-device serial number */
+    unsigned char sn[RBF_DEVICE_SN_LEN];     /**< Sub-device serial number SN is a visible string, up to 16 characters long (note that it cannot be handled in the C string way, because when SN reaches 16 characters, there is no '\0' in the array. */
     unsigned char err;        /**< Error code for registration failure*/
-    unsigned char mac[32];    /**< MAC address */
+    unsigned char mac[RBF_DEVICE_MAC_LEN];    /**< MAC address */
 }RBF_register_response_t;
 
 
@@ -223,9 +234,24 @@ typedef struct
 
 typedef struct
 {
-    uint8_t realtime_rssi; 
-    uint8_t avg_rssi;     
+    int32_t realtime_rssi; 
+    int32_t avg_rssi;     
 } RBF_hub_noise_t;
+
+
+typedef enum 
+{
+    RBF_WAVE_TYPE_CARRIER = 0,   /**< Carrier wave */
+    RBF_WAVE_TYPE_DATA,           /**< Data wave */
+} RBF_wave_type_t;
+
+
+typedef enum 
+{
+    RBF_ANT_BUILTIN_0 = 0,    /**< Built-in antenna 0 */
+    RBF_ANT_BUILTIN_1,       /**< Built-in antenna 1 */
+    RBF_ANT_EXTERNAL,        /**< External antenna */
+} RBF_ant_index_t;
 
 /**
  * @brief HUB  event callback functions
@@ -274,6 +300,11 @@ typedef struct
      * by rbf_get_hub_version()
      */
     int (*rbf_get_hub_noise)(RBF_hub_noise_t* noise);
+
+    /**
+     * @brief Callback for hub detects jamming
+     */
+    int (*rbf_jamming_handle)(bool jamming);
 }RBF_evt_callbacks_t;
 
 /**
@@ -300,13 +331,6 @@ int rbf_register_evt_callback(RBF_evt_callbacks_t* cbs);
  * @return int Return 0 on success, -1 on failure
  */
 int  rbf_init(void);
-
-/**
- * @brief Delete initializ the protocol stack
- * 
- * @return int unsigned int Return 0 on success, -1 on failure
- */
-int  rbf_delinit(void);
 
 
 /**
@@ -473,9 +497,29 @@ int rbf_device_io_alarm_set(unsigned char* io_list, unsigned char count, RBF_io_
  * 
  * @param freq  Currently supports RBF_FREQ_868/RBF_FREQ_915/RBF_FREQ_433
  * @return int 0: Setting successful, -1: Setting failed
+ * @note Calling this function is equivalent to calling rbf_set_hub(freq, 0)
  */
 int rbf_set_freq(RBF_Freq_t freq);
 
+/**
+ * @brief Set the hub
+ * 
+ * @param freq  Currently supports RBF_FREQ_868/RBF_FREQ_915/RBF_FREQ_433/RBF_FREQ_916
+ * @param jamming_threshold Jamming threshold default-0
+ * @return int 0: Setting successful, -1: Setting failed
+ */
+int rbf_set_hub(RBF_Freq_t freq, unsigned char jamming_threshold);
+
+
+/**
+ * @brief Set the hub with extended parameters
+ * 
+ * @param freq  Currently supports RBF_FREQ_868/RBF_FREQ_915/RBF_FREQ_433
+ * @param jamming_threshold Jamming threshold default-0
+ * @param cust_code Customer code, default-0
+ * @return int 0: Setting successful, -1: Setting failed
+ */
+int rbf_set_hub_ex(RBF_Freq_t freq, unsigned char jamming_threshold, unsigned int cust_code);
 
 /**
  * @brief Get hub software version
@@ -494,6 +538,34 @@ int rbf_get_hub_version(void);
  * the noise info will be returned in the callback function.
  */
 int rbf_get_hub_noise(void);
+
+
+/**
+ * @brief Start carrier transmission
+ * 
+ * @param channel Carrier transmission channel
+ * @param power The actual transmit power is power divided by 10.
+ * @param type wave type
+ * @param index Carrier transmit antenna selection
+ * @return int 0: successful, -1: failed
+ */
+int rbf_send_carrier(int channel, int power, RBF_wave_type_t type, RBF_ant_index_t index);
+
+
+/**
+ * @brief Stop carrier transmission
+ * 
+ * @return int 
+ */
+int rbf_send_carrier_stop();
+
+
+/**
+ * @brief reset hub by port reset handle
+ * 
+ * @return int 0 RBF stack has been reset successfully
+ */
+int rbf_hub_reset(void);
 
 #ifdef __cplusplus
 }

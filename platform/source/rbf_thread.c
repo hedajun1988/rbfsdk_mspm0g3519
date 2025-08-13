@@ -25,9 +25,9 @@ int rbf_thread_create(const char* name, size_t iThreadStackSize,
                     NULL );      /* Used to pass out the created task's handle. */
 
     if( xReturned == pdPASS ) {
-        return -1;
-    } else {
         return 0;
+    } else {
+        return -1;
     }
 }
 
