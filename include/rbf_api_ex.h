@@ -1,7 +1,10 @@
 /**
  * @file rbf_api_ex.h
  * @author Jio (hedajun@hzdusun.com)
- * @brief 
+ * @brief rbf_api_ex is an extension of rbf_api, 
+ *     providing more advanced functional interfaces
+ *     Supports production testing, certification, 
+ *     and other scenarios
  * @version 0.1
  * @date 2025-09-04
  * 
@@ -22,7 +25,7 @@ extern "C"
 /**
  * @brief Set the hub with extended parameters
  * 
- * @param freq  Currently supports RBF_FREQ_868/RBF_FREQ_915/RBF_FREQ_433
+ * @param freq  Currently supports RBF_FREQ_868/RBF_FREQ_915/RBF_FREQ_433/RBF_FREQ_916/RBF_FREQ_WPC_868/RBF_FREQ_MAL_915
  * @param jamming_threshold Jamming threshold default-0
  * @param cust_code Customer code, default-0
  * @return int 0: Setting successful, -1: Setting failed
@@ -75,16 +78,6 @@ int rbf_get_hub_panid_ex(unsigned int* panid);
  * @return int 0: successful, -1: failed
  */
 int rbf_get_hub_version_ex(char* version_str);
-
-/**
- * @brief Set the hub with extended parameters
- * 
- * @param freq  Currently supports RBF_FREQ_868/RBF_FREQ_915/RBF_FREQ_433
- * @param jamming_threshold Jamming threshold default-0
- * @param cust_code Customer code, default-0
- * @return int 0: Setting successful, -1: Setting failed
- */
-int rbf_set_hub_ex(RBF_Freq_t freq, unsigned char jamming_threshold, unsigned int cust_code);
 
 
 /**

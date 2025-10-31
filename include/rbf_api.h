@@ -21,7 +21,7 @@ extern "C"
 
 #define RB_SDK_VERSION             0
 #define RB_SDK_REVISION            3
-#define RB_SDK_PATCH               3
+#define RB_SDK_PATCH               4
 
 #define RBF_DEVICE_MAC_LEN         (8)         /**< RBF sub-device MAC length */
 #define RBF_DEVICE_SN_LEN          (16)        /**< RBF sub-device serial number length */
@@ -132,6 +132,7 @@ typedef enum
     RBF_FREQ_916 = 3,  /**< 916MHz-927.9MHz frequency band */
     RBF_FREQ_WPC_868 = 4,  /**< 865MHz-868MHz frequency band */
     RBF_FREQ_MAL_915 = 5,  /**< 919MHz-923MHz frequency band */
+    RBF_FREQ_INRA_868 = 6,  /**< 868MHz-869.9 frequency band  */
 } RBF_Freq_t;
 
 /**
@@ -222,20 +223,20 @@ typedef struct
 
 typedef struct 
 {
-    uint8_t major;
-    uint8_t sub;
-    uint8_t patch;
-    uint8_t build_year;
-    uint8_t build_month;
-    uint8_t build_date;
-    uint8_t build_no;
+    uint8_t major;  /**< Hub major version number */
+    uint8_t sub;    /**< Hub minor version number */
+    uint8_t patch;  /**< Hub patch version number */
+    uint8_t build_year;     /**< Hub build year */
+    uint8_t build_month;    /**< Hub build month  */
+    uint8_t build_date;     /**< Hub build date */
+    uint8_t build_no;       /**< Hub build number */
 }RBF_hub_sw_ver_t;
 
 
 typedef struct
 {
-    int32_t realtime_rssi; 
-    int32_t avg_rssi;     
+    int32_t realtime_rssi; /**< Hub real-time background noise */
+    int32_t avg_rssi;       /**< Hub average background noise */
 } RBF_hub_noise_t;
 
 
