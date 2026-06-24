@@ -72,17 +72,17 @@ typedef enum
  */
 typedef struct
 {
-    rbf_keypad_alarm_tone_type_t alarm_tone_play; /**< Alarm tone to play */
+    rbf_keypad_alarm_tone_type_t alarm_tone_play; /**< Alarm tone used for linkage with other devices, such as a magnetic contact; usually issued by the hub for a specific service scenario */
     uint8_t err_led_state;                        /**< Error LED: 0-off when wakeup, 1-on when wakeup */
     uint8_t arm_led_state;                        /**< Arm LED: 0-off when wakeup, 1-on when wakeup */
     uint8_t warn_led_state;                       /**< Warn LED: 0-off when wakeup, 1-on when wakeup, 2-blink when wakeup */
     uint8_t key_tone_enable;                      /**< Key tone when pressed: 0-disable, 1-enable */
     rbf_keypad_backlight_time_t backlight_time;   /**< Backlight duration time */
     uint8_t lock_state;                           /**< Keypad lock: 0-unlock, 1-lock */
-    uint8_t local_enable;                         /**< Local arming control enable: 0-disable, 1-enable */
-    uint8_t emergency_voice_enable;               /**< Emergency alarm voice prompt: 0-disable, 1-enable */
-    uint8_t medical_voice_enable;                 /**< Medical alarm voice prompt: 0-disable, 1-enable */
-    uint8_t sounder_enable;                       /**< Sounder relay output: 0-disable, 1-enable */
+    uint8_t local_enable;                         /**< Local alarm key enable for keys 1, 2, and 3: 0-disable long-press alarm keys, 1-enable long-press alarm keys */
+    uint8_t emergency_voice_enable;               /**< Intrusion alarm voice prompt after long-press key 2 triggers an event: 0-disable, 1-enable */
+    uint8_t medical_voice_enable;                 /**< Medical alarm voice prompt after long-press key 3 triggers an event: 0-disable, 1-enable */
+    uint8_t sounder_enable;                       /**< Global sound mute switch with highest priority: 0-disable all keypad sounds, 1-enable sounds */
 }rbf_keypad_settings_t;
 
 
