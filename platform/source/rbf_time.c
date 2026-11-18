@@ -15,3 +15,8 @@ void rbf_time_get_ms(rbf_time_t* time)
 {
     *time = xTaskGetTickCount() * portTICK_PERIOD_MS;
 }
+
+void rbf_time_get_monotonic_ms(rbf_time_t* time)
+{
+    rbf_time_get_ms(time);
+}

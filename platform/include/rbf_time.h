@@ -14,6 +14,8 @@
 typedef unsigned long  rbf_time_t;
 
 void rbf_time_get_ms(rbf_time_t* time);
+/* Monotonic elapsed-time clock, wrapping at rbf_time_t width. */
+void rbf_time_get_monotonic_ms(rbf_time_t* time);
 
 
 

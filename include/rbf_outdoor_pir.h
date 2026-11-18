@@ -70,6 +70,16 @@ typedef struct
     rbf_outdoor_pir_sensitive_t sensitivity;     /**< PIR sensor sensitivity */
 }rbf_outdoor_pir_config_t;
 
+/** Extended option configuration; legacy layout and defaults are unchanged. */
+typedef struct {
+    uint8_t tamper_enable;           /**< Detection: 0 disabled, 1 enabled. */
+    uint8_t sensitivity_pulses;      /**< 0 protocol default, or 1..15 pulses. */
+    uint8_t alarm_led_disabled;      /**< 0 enabled, 1 disabled. */
+} rbf_outdoor_pir_config_ex_t;
+int rbf_outdoor_pir_set_ex(uint8_t no, const rbf_outdoor_pir_config_ex_t *config);
+int rbf_outdoor_pir_update_ex(uint8_t no, const rbf_outdoor_pir_config_ex_t *config);
+
+
 
 /**
  * @brief Callback function to handle outdoor PIR device heartbeat events.

@@ -79,6 +79,15 @@ typedef struct
  */
 int rbf_magnetic_register_callbacks(rbf_magnetic_callbacks_t* cbs);
 
+/** Complete MC option configuration. Boolean fields accept only 0 or 1. */
+typedef struct {
+    uint8_t alarm_led_disabled;
+    uint8_t tamper_led_disabled;
+} rbf_magnetic_config_t;
+int rbf_magnetic_set(uint8_t no, const rbf_magnetic_config_t *config);
+int rbf_magnetic_update(uint8_t no, const rbf_magnetic_config_t *config);
+
+
 
 
 

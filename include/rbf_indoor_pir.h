@@ -70,6 +70,26 @@ typedef struct
     rbf_indoor_pir_sensitive_t sensitivity;     /**< PIR sensor sensitivity */
 }rbf_indoor_pir_config_t;
 
+/** Explicit extended configuration; the legacy structure and defaults stay intact.
+ * A zero pulse count selects the protocol default, otherwise use 1..15.
+ * LED disable fields accept only 0 (enabled) or 1 (disabled).
+ * Tamper detection and tamper LED are independent.
+ */
+typedef struct {
+    uint8_t tamper_enable;
+    uint8_t sensitivity_pulses;
+    uint8_t alarm_led_disabled;
+    uint8_t tamper_led_disabled;
+} rbf_indoor_pir_config_ex_t;
+
+/** Queue for the next synchronous broadcast. Returns 0 or -1. */
+int rbf_indoor_pir_set_ex(uint8_t no, const rbf_indoor_pir_config_ex_t *config);
+/** Send option immediately, then UpdateMe only if the option send succeeded.
+ * Success means accepted by the transport, not applied by the device.
+ */
+int rbf_indoor_pir_update_ex(uint8_t no, const rbf_indoor_pir_config_ex_t *config);
+
+
 
 /**
  * @brief Callback function to handle indoor PIR device heartbeat events.
