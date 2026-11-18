@@ -21,7 +21,7 @@ extern "C"
 
 #define RB_SDK_VERSION             0
 #define RB_SDK_REVISION            5
-#define RB_SDK_PATCH               0
+#define RB_SDK_PATCH               1
 
 #define RBF_DEVICE_MAC_LEN         (8)         /**< RBF sub-device MAC length */
 #define RBF_DEVICE_SN_LEN          (16)        /**< RBF sub-device serial number length */
@@ -67,7 +67,8 @@ typedef enum
     RBF_DEV_TYPE_OUT_PIR      = 15,     /**< Outdoor PIR sensor */
     RBF_DEV_TYPE_WIRED_TO_WIRELESS = 16, /**< Wired-to-wireless converter */
     RBF_DEV_TYPE_REPEATER     = 17,     /**< Repeater */
-    RBF_DEV_TYPE_UNKNOW,            /**< Unknown device */
+    RBF_DEV_TYPE_UNKNOW = 18,            /**< Unknown device */
+    RBF_DEV_TYPE_MAGNETIC2 = 19, /**< New door sensor; use rbf_magnetic2_* */
 } RBF_dev_type_t;
 
 

@@ -2,6 +2,9 @@
  * @file rbf_clone.h
  * @brief Hub data import/export API (host validation; hardware validation pending).
  *
+ * Normal-mode callbacks execute on the clone worker (default stack: 64 KiB).
+ * Build the SDK with RBF_CLONE_THREAD_STACK_SIZE to override this budget.
+ * Keep callbacks bounded; use heap storage or an application queue for large work.
  * The SDK schedules transfers internally. No application polling is required.
  * Data is opaque: the application owns storage and file validation. This API
  * does not promise selective import, merging, or simultaneous cloned hubs.
